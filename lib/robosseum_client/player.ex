@@ -48,14 +48,13 @@ defmodule RobosseumClient.Player do
   end
 
   def handle_message(topic, "bid", %{"player" => %{"to_call" => to_call}} = payload, transport, state) do
-    :timer.sleep(1000)
     action =
       case Enum.random(0..100) do
         x when x in 0..10 -> :fold
         x when x in 11..50 -> :call
         x when x in 51..100 -> :bid
       end
-    GenSocketClient.push(transport, topic, "player_action", %{bid: Enum.random(to_call..50), action: action})
+    GenSocketClient.push(transport, topic, "player_action", %{bid: Enum.random(to_call..100), action: action})
     {:ok, state}
   end
 
