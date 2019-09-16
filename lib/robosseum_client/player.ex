@@ -48,6 +48,7 @@ defmodule RobosseumClient.Player do
   end
 
   def handle_message(topic, "bid", %{"player" => %{"to_call" => to_call}} = payload, transport, state) do
+    Logger.info("message on topic #{topic}: bid #{inspect payload}")
     action =
       case Enum.random(0..100) do
         x when x in 0..10 -> :fold
@@ -59,7 +60,7 @@ defmodule RobosseumClient.Player do
   end
 
   def handle_message(topic, event, payload, _transport, state) do
-    Logger.warn("message on topic #{topic}: #{event} #{inspect payload}")
+    Logger.warn("message on topic #{topic}: #{event}")
     {:ok, state}
   end
 
