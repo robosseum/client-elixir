@@ -6,15 +6,17 @@ defmodule RobosseumClient.Player do
 
   def start_link() do
     Logger.info("start link")
+
     GenSocketClient.start_link(
-          __MODULE__,
-          Phoenix.Channels.GenSocketClient.Transport.WebSocketClient,
-          "ws://localhost:4000/socket/websocket"
-        )
+      __MODULE__,
+      Phoenix.Channels.GenSocketClient.Transport.WebSocketClient,
+      "ws://localhost:4000/socket/websocket"
+    )
   end
 
   def init(url) do
-    {:connect, url, [type: :player, id: System.get_env("player")], %{table_id: System.get_env("table")}}
+    {:connect, url, [type: :player, id: System.get_env("player")],
+     %{table_id: System.get_env("table")}}
   end
 
   def handle_connected(transport, state) do
@@ -24,7 +26,7 @@ defmodule RobosseumClient.Player do
   end
 
   def handle_disconnected(reason, state) do
-    Logger.error("disconnected: #{inspect reason}")
+    Logger.error("disconnected: #{inspect(reason)}")
     Process.send_after(self(), :connect, :timer.seconds(1))
     # System.stop(0)
     {:ok, state}
@@ -32,30 +34,42 @@ defmodule RobosseumClient.Player do
 
   def handle_joined(topic, payload, _transport, state) do
     Logger.info("joined the topic #{topic}")
-    Logger.info(inspect payload)
+    Logger.info(inspect(payload))
     {:ok, state}
   end
 
   def handle_join_error(topic, payload, _transport, state) do
-    Logger.error("join error on the topic #{topic}: #{inspect payload}")
+    Logger.error("join error on the topic #{topic}: #{inspect(payload)}")
     {:ok, state}
   end
 
   def handle_channel_closed(topic, payload, _transport, state) do
-    Logger.error("disconnected from the topic #{topic}: #{inspect payload}")
+    Logger.error("disconnected from the topic #{topic}: #{inspect(payload)}")
     # Process.send_after(self(), {:join, topic}, :timer.seconds(1))
     {:ok, state}
   end
 
-  def handle_message(topic, "bid", %{"player" => %{"to_call" => to_call}} = payload, transport, state) do
-    Logger.info("message on topic #{topic}: bid #{inspect payload}")
+  def handle_message(
+        topic,
+        "bid",
+        %{"player" => %{"to_call" => to_call, "chips" => _chips, "bid_chips" => _bid_chips}} =
+          payload,
+        transport,
+        state
+      ) do
+    Logger.info("message on topic #{topic}: bid #{inspect(payload)}")
+
     action =
       case Enum.random(0..100) do
         x when x in 0..10 -> :fold
-        x when x in 11..50 -> :call
-        x when x in 51..100 -> :bid
+        x when x in 11..100 -> :bid
       end
-    GenSocketClient.push(transport, topic, "player_action", %{bid: Enum.random(to_call..100), action: action})
+
+    GenSocketClient.push(transport, topic, "player_action", %{
+      bid: Enum.random(to_call..100),
+      action: action
+    })
+
     {:ok, state}
   end
 
@@ -92,7 +106,7 @@ defmodule RobosseumClient.Player do
   # end
 
   def handle_info(message, _transport, state) do
-    Logger.warn("Unhandled message #{inspect message}")
+    Logger.warn("Unhandled message #{inspect(message)}")
     {:ok, state}
   end
 end

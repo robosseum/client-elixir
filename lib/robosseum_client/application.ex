@@ -14,7 +14,6 @@ defmodule RobosseumClient.Application do
         id: RobosseumClient.Player,
         start: {RobosseumClient.Player, :start_link, []}
       }
-
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

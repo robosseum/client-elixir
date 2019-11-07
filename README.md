@@ -1,21 +1,8 @@
 # RobosseumClient
 
-**TODO: Add description**
-
-## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `robosseum_client` to your list of dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [
-    {:robosseum_client, "~> 0.1.0"}
-  ]
-end
 ```
+# Sample run commands
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/robosseum_client](https://hexdocs.pm/robosseum_client).
-
+table=bab86b68-7db6-42d2-a8fe-b5295bd6e789 player=554d181f-a745-4007-a951-cdb2c1379568 mix run --no-halt 
+table=bab86b68-7db6-42d2-a8fe-b5295bd6e789 player=f6f4c264-73a0-4f33-a453-4edef8b1bd0a mix run --no-halt
+```
